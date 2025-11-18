@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swap - ISTOS Cryptocurrency Exchange</title>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.bunny.net/css?family=proxima-nova:400,600,700,800,900" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FF6B00;
+            --primary-dark: #E55A00;
+            --primary-light: #FF8C42;
+            --gold: #D4AF37;
+            --gold-light: #F4D683;
+            --secondary: #0A0A0A;
+            --secondary-light: #1A1A1A;
+            --bg-dark: #0A0A0A;
+            --bg-cream: #FFF8F3;
+            --success: #00C896;
+            --error: #FF3B30;
+
+            --gradient-primary: linear-gradient(135deg, #FF6B00 0%, #FFB84D 100%);
+            --gradient-gold: linear-gradient(135deg, #D4AF37 0%, #F4D683 100%);
+            --gradient-elite: linear-gradient(135deg, #0A0A0A 0%, #FF6B00 50%, #D4AF37 100%);
+        }
+
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            background: var(--bg-dark);
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6, button, .nav-links {
+            font-family: 'Proxima Nova', sans-serif;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--secondary-light);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 5px;
+        }
+
+        .compliance-banner {
+            background: linear-gradient(90deg, #FFF8F3 0%, #FFE8D5 100%);
+            padding: 0.5rem 1rem;
+            text-align: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10001;
+            font-size: 0.75rem;
+            border-bottom: 1px solid rgba(255, 107, 0, 0.15);
+            color: #0A0A0A;
+            font-weight: 600;
+        }
+
+        nav.main-nav {
+            position: fixed;
+            top: 35px;
+            left: 0;
+            right: 0;
+            z-index: 10000;
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .user-menu:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 100px;
+            width: 250px;
+            height: calc(100vh - 100px);
+            background: var(--secondary-light);
+            padding: 2rem 0;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .sidebar-link {
+            display: block;
+            padding: 0.75rem 2rem;
+            color: #999;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-link:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar-link.active {
+            color: var(--primary);
+            background: rgba(255, 107, 0, 0.1);
+            border-left-color: var(--primary);
+        }
+
+        .main-content {
+            margin-left: 250px;
+            margin-top: 100px;
+            padding: 2rem;
+            min-height: calc(100vh - 100px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .swap-container {
+            max-width: 500px;
+            width: 100%;
+            margin-bottom: 3rem;
+        }
+
+        .swap-card {
+            background: rgba(26, 26, 26, 0.5);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+
+        .token-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .token-input-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .input-label {
+            color: #999;
+            font-size: 0.875rem;
+        }
+
+        .balance {
+            color: #999;
+            font-size: 0.875rem;
+        }
+
+        .balance span {
+            color: #fff;
+        }
+
+        .token-input-body {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .amount-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: 600;
+            outline: none;
+        }
+
+        .token-select {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .token-select:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .token-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.75rem;
+        }
+
+        .token-symbol {
+            font-weight: 600;
+        }
+
+        .max-button {
+            background: rgba(255, 107, 0, 0.2);
+            color: var(--primary);
+            border: none;
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .max-button:hover {
+            background: rgba(255, 107, 0, 0.3);
+        }
+
+        .swap-arrow {
+            display: flex;
+            justify-content: center;
+            margin: -0.5rem 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .swap-arrow-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--secondary-light);
+            border: 4px solid var(--bg-dark);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .swap-arrow-button:hover {
+            transform: rotate(180deg);
+            background: rgba(255, 107, 0, 0.2);
+        }
+
+        .swap-info {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+
+        .info-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-label {
+            color: #999;
+            font-size: 0.875rem;
+        }
+
+        .info-value {
+            font-weight: 600;
+        }
+
+        .slippage-settings {
+            margin-bottom: 1.5rem;
+        }
+
+        .slippage-label {
+            color: #999;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .slippage-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+        }
+
+        .slippage-btn {
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .slippage-btn.active {
+            background: rgba(255, 107, 0, 0.2);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .slippage-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Proxima Nova', sans-serif;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 107, 0, 0.3);
+        }
+
+        .recent-swaps {
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .card {
+            background: rgba(26, 26, 26, 0.5);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #999;
+            font-size: 0.875rem;
+        }
+
+        td {
+            padding: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: rgba(0, 200, 150, 0.2);
+            color: var(--success);
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .swap-container {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="compliance-banner">
+        Crypto assets are unregulated and high risk. Capital at risk.
+    </div>
+
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="url(#gradient)" />
+                    <path d="M2 17L12 22L22 17" stroke="url(#gradient)" stroke-width="2" />
+                    <defs>
+                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#FF6B00" />
+                            <stop offset="100%" style="stop-color:#D4AF37" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+                ISTOS
+            </div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="markets-swap.html">Markets</a></li>
+                <li><a href="staking-dashboard.html">Staking</a></li>
+                <li><a href="nft-explore.html">NFTs</a></li>
+            </ul>
+            <div class="nav-actions">
+                <div class="user-menu">
+                    <div class="user-avatar">
+                        <i data-lucide="user" style="width: 18px; height: 18px;"></i>
+                    </div>
+                    <span>John Doe</span>
+                    <i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <nav class="sidebar">
+        <a href="dashboard.html" class="sidebar-link">
+            <i data-lucide="layout-dashboard" style="width: 18px; height: 18px; display: inline; margin-right: 0.5rem;"></i>
+            Dashboard
+        </a>
+        <a href="portfolio.html" class="sidebar-link">
+            <i data-lucide="pie-chart" style="width: 18px; height: 18px; display: inline; margin-right: 0.5rem;"></i>
+            Portfolio
+        </a>
+        <a href="markets-swap.html" class="sidebar-link active">
+            <i data-lucide="trending-up" style="width: 18px; height: 18px; display: inline; margin-right: 0.5rem;"></i>
+            Markets
+        </a>
+        <a href="staking-dashboard.html" class="sidebar-link">
+            <i data-lucide="coins" style="width: 18px; height: 18px; display: inline; margin-right: 0.5rem;"></i>
+            Staking
+        </a>
+        <a href="token-sales.html" class="sidebar-link">
+            <i data-lucide="rocket" style="width: 18px; height: 18px; display: inline; margin-right: 0.5rem;"></i>
+            Token Sales
+        </a>
+        <a href="nft-explore.html" class="sidebar-link">
+            <i data-lucide="image" style="width: 18px; height: 18px; display: inline; margin-right: 0.5rem;"></i>
+            NFTs
+        </a>
+        <a href="wallet-overview.html" class="sidebar-link">
+            <i data-lucide="wallet" style="width: 18px; height: 18px; display: inline; margin-right: 0.5rem;"></i>
+            Wallet
+        </a>
+        <a href="affiliate-dashboard.html" class="sidebar-link">
+            <i data-lucide="users" style="width: 18px; height: 18px; display: inline; margin-right: 0.5rem;"></i>
+            Affiliate
+        </a>
+        <a href="support.html" class="sidebar-link">
+            <i data-lucide="help-circle" style="width: 18px; height: 18px; display: inline; margin-right: 0.5rem;"></i>
+            Support
+        </a>
+    </nav>
+
+    <main class="main-content">
+        <h1 class="page-title">Swap Tokens</h1>
+
+        <div class="swap-container">
+            <div class="swap-card">
+                <!-- From Token -->
+                <div class="token-input">
+                    <div class="token-input-header">
+                        <span class="input-label">From</span>
+                        <span class="balance">Balance: <span id="fromBalance">5,000</span></span>
+                    </div>
+                    <div class="token-input-body">
+                        <input type="number" class="amount-input" id="fromAmount" placeholder="0.0" value="1000">
+                        <button class="max-button" onclick="setMaxFrom()">MAX</button>
+                        <div class="token-select" onclick="selectFromToken()">
+                            <div class="token-icon" style="background: rgba(38, 161, 123, 0.2); color: #26A17B;">U</div>
+                            <span class="token-symbol">USDT</span>
+                            <i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Swap Arrow -->
+                <div class="swap-arrow">
+                    <button class="swap-arrow-button" onclick="swapTokens()">
+                        <i data-lucide="arrow-down-up" style="width: 20px; height: 20px;"></i>
+                    </button>
+                </div>
+
+                <!-- To Token -->
+                <div class="token-input">
+                    <div class="token-input-header">
+                        <span class="input-label">To</span>
+                        <span class="balance">Balance: <span id="toBalance">10,000</span></span>
+                    </div>
+                    <div class="token-input-body">
+                        <input type="number" class="amount-input" id="toAmount" placeholder="0.0" value="2222.22" readonly>
+                        <div class="token-select" onclick="selectToToken()">
+                            <div class="token-icon" style="background: rgba(255, 107, 0, 0.2); color: #FF6B00;">C</div>
+                            <span class="token-symbol">C2S</span>
+                            <i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slippage Tolerance -->
+                <div class="slippage-settings">
+                    <label class="slippage-label">Slippage Tolerance</label>
+                    <div class="slippage-options">
+                        <button class="slippage-btn" onclick="setSlippage(0.5)">0.5%</button>
+                        <button class="slippage-btn active" onclick="setSlippage(1)">1%</button>
+                        <button class="slippage-btn" onclick="setSlippage(2)">2%</button>
+                    </div>
+                </div>
+
+                <!-- Swap Info -->
+                <div class="swap-info">
+                    <div class="info-row">
+                        <span class="info-label">Exchange Rate</span>
+                        <span class="info-value">1 USDT = 2.222 C2S</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Price Impact</span>
+                        <span class="info-value" style="color: var(--success);">< 0.01%</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Network Fee</span>
+                        <span class="info-value">~€0.50</span>
+                    </div>
+                </div>
+
+                <!-- Swap Button -->
+                <button class="btn btn-primary" onclick="reviewSwap()">
+                    Review Swap
+                </button>
+            </div>
+        </div>
+
+        <!-- Recent Swaps -->
+        <div class="recent-swaps">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Recent Swaps</h3>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>From</th>
+                            <th>To</th>
+                            <th>Rate</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1,000 USDT</td>
+                            <td>2,222.22 C2S</td>
+                            <td>1 USDT = 2.222 C2S</td>
+                            <td>5 min ago</td>
+                            <td><span class="badge badge-success">Completed</span></td>
+                        </tr>
+                        <tr>
+                            <td>0.5 BTC</td>
+                            <td>21,250 EUR</td>
+                            <td>1 BTC = 42,500 EUR</td>
+                            <td>1 hour ago</td>
+                            <td><span class="badge badge-success">Completed</span></td>
+                        </tr>
+                        <tr>
+                            <td>5 ETH</td>
+                            <td>16,000 EUR</td>
+                            <td>1 ETH = 3,200 EUR</td>
+                            <td>3 hours ago</td>
+                            <td><span class="badge badge-success">Completed</span></td>
+                        </tr>
+                        <tr>
+                            <td>500 C2S</td>
+                            <td>225 USDT</td>
+                            <td>1 C2S = 0.45 USDT</td>
+                            <td>Yesterday</td>
+                            <td><span class="badge badge-success">Completed</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        let currentSlippage = 1;
+
+        function setSlippage(value) {
+            currentSlippage = value;
+            document.querySelectorAll('.slippage-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        function setMaxFrom() {
+            const balance = document.getElementById('fromBalance').textContent.replace(',', '');
+            document.getElementById('fromAmount').value = balance;
+            calculateToAmount();
+        }
+
+        function calculateToAmount() {
+            const fromAmount = parseFloat(document.getElementById('fromAmount').value) || 0;
+            const rate = 2.222; // Example rate
+            const toAmount = fromAmount * rate;
+            document.getElementById('toAmount').value = toAmount.toFixed(2);
+        }
+
+        function swapTokens() {
+            alert('Swap tokens direction - implement token switching');
+        }
+
+        function selectFromToken() {
+            alert('Select from token - implement token selector modal');
+        }
+
+        function selectToToken() {
+            alert('Select to token - implement token selector modal');
+        }
+
+        function reviewSwap() {
+            const fromAmount = document.getElementById('fromAmount').value;
+            const toAmount = document.getElementById('toAmount').value;
+
+            if (!fromAmount || fromAmount <= 0) {
+                alert('Please enter an amount to swap');
+                return;
+            }
+
+            alert(`Review Swap:\nFrom: ${fromAmount} USDT\nTo: ${toAmount} C2S\nSlippage: ${currentSlippage}%\n\nImplement review modal here`);
+        }
+
+        // Update to amount when from amount changes
+        document.getElementById('fromAmount').addEventListener('input', calculateToAmount);
+    </script>
+</body>
+</html>
