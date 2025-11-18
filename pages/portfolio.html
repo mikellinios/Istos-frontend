@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - ISTOS Cryptocurrency Exchange</title>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.bunny.net/css?family=proxima-nova:400,600,700,800,900" rel="stylesheet">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FF6B00;
+            --primary-dark: #E55A00;
+            --primary-light: #FF8C42;
+            --gold: #D4AF37;
+            --gold-light: #F4D683;
+            --secondary: #0A0A0A;
+            --secondary-light: #1A1A1A;
+            --bg-dark: #0A0A0A;
+            --bg-cream: #FFF8F3;
+            --success: #00C896;
+            --error: #FF3B30;
+
+            --gradient-primary: linear-gradient(135deg, #FF6B00 0%, #FFB84D 100%);
+            --gradient-gold: linear-gradient(135deg, #D4AF37 0%, #F4D683 100%);
+            --gradient-elite: linear-gradient(135deg, #0A0A0A 0%, #FF6B00 50%, #D4AF37 100%);
+        }
+
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            background: var(--bg-dark);
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6, button, .nav-links {
+            font-family: 'Proxima Nova', sans-serif;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--secondary-light);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
+        .compliance-banner {
+            background: linear-gradient(90deg, #FFF8F3 0%, #FFE8D5 100%);
+            padding: 0.5rem 1rem;
+            text-align: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10001;
+            font-size: 0.75rem;
+            border-bottom: 1px solid rgba(255, 107, 0, 0.15);
+            color: #0A0A0A;
+            font-weight: 600;
+        }
+
+        nav.main-nav {
+            position: fixed;
+            top: 35px;
+            left: 0;
+            right: 0;
+            z-index: 10000;
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .user-menu:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 100px;
+            width: 250px;
+            height: calc(100vh - 100px);
+            background: var(--secondary-light);
+            padding: 2rem 0;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .sidebar-link {
+            display: block;
+            padding: 0.75rem 2rem;
+            color: #999;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-link:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar-link.active {
+            color: var(--primary);
+            background: rgba(255, 107, 0, 0.1);
+            border-left-color: var(--primary);
+        }
+
+        .main-content {
+            margin-left: 250px;
+            margin-top: 100px;
+            padding: 2rem;
+            min-height: calc(100vh - 100px);
+        }
+
+        .portfolio-header {
+            background: rgba(26, 26, 26, 0.5);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .total-balance-label {
+            color: #999;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .total-balance {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .balance-change {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--success);
+            font-size: 1.1rem;
+        }
+
+        .card {
+            background: rgba(26, 26, 26, 0.5);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #999;
+            font-size: 0.875rem;
+        }
+
+        td {
+            padding: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .asset-cell {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .asset-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.875rem;
+        }
+
+        .asset-name {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .asset-symbol {
+            font-weight: 600;
+        }
+
+        .asset-fullname {
+            font-size: 0.875rem;
+            color: #999;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Proxima Nova', sans-serif;
+            font-size: 0.875rem;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 0, 0.3);
+        }
+
+        .btn-ghost {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .total-balance {
+                font-size: 2rem;
+            }
+
+            table {
+                font-size: 0.875rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="compliance-banner">
+        Crypto assets are unregulated and high risk. Capital at risk.
+    </div>
+
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="url(#gradient)" />
+                    <path d="M2 17L12 22L22 17" stroke="url(#gradient)" stroke-width="2" />
+                    <defs>
+                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#FF6B00" />
+                            <stop offset="100%" style="stop-color:#D4AF37" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+                ISTOS
+            </div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="markets-swap.html">Markets</a></li>
+                <li><a href="staking-dashboard.html">Staking</a></li>
+                <li><a href="nft-explore.html">NFTs</a></li>
+            </ul>
+            <div class="nav-actions">
+                <div class="user-menu">
+                    <div class="user-avatar">
+                        <i data-lucide="user" style="width: 18px; height: 18px;"></i>
+                    </div>
+                    <span>John Doe</span>
+                    <i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <nav class="sidebar">
+        <a href="dashboard.html" class="sidebar-link">
+            <i data-lucide="layout-dashboard" style="width: 18px; height: 18px; display: inline; margin-right: 0.5rem;"></i>
+            Dashboard
+        </a>
+        <a href="portfolio.html" class="sidebar-link active">
+            <i data-lucide="pie-chart" style="width: 18px; height: 18px; display: inline; margin-right: 0.5rem;"></i>
+            Portfolio
+        </a>
+        <a href="markets-swap.html" class="sidebar-link">
+            <i data-lucide="trending-up" style="width: 18px; height: 18px; display: inline; margin-right: 0.5rem;"></i>
+            Markets
+        </a>
+        <a href="staking-dashboard.html" class="sidebar-link">
+            <i data-lucide="coins" style="width: 18px; height: 18px; display: inline; margin-right: 0.5rem;"></i>
+            Staking
+        </a>
+        <a href="token-sales.html" class="sidebar-link">
+            <i data-lucide="rocket" style="width: 18px; height: 18px; display: inline; margin-right: 0.5rem;"></i>
+            Token Sales
+        </a>
+        <a href="nft-explore.html" class="sidebar-link">
+            <i data-lucide="image" style="width: 18px; height: 18px; display: inline; margin-right: 0.5rem;"></i>
+            NFTs
+        </a>
+        <a href="wallet-overview.html" class="sidebar-link">
+            <i data-lucide="wallet" style="width: 18px; height: 18px; display: inline; margin-right: 0.5rem;"></i>
+            Wallet
+        </a>
+        <a href="affiliate-dashboard.html" class="sidebar-link">
+            <i data-lucide="users" style="width: 18px; height: 18px; display: inline; margin-right: 0.5rem;"></i>
+            Affiliate
+        </a>
+        <a href="support.html" class="sidebar-link">
+            <i data-lucide="help-circle" style="width: 18px; height: 18px; display: inline; margin-right: 0.5rem;"></i>
+            Support
+        </a>
+    </nav>
+
+    <main class="main-content">
+        <!-- Portfolio Header -->
+        <div class="portfolio-header">
+            <div class="total-balance-label">Total Portfolio Value</div>
+            <div class="total-balance">€52,450.00</div>
+            <div class="balance-change">
+                <i data-lucide="trending-up" style="width: 20px; height: 20px;"></i>
+                <span>+€2,340.00 (+4.67%) Today</span>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="grid-2">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Performance (30 Days)</h3>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn btn-ghost">7D</button>
+                        <button class="btn btn-primary">30D</button>
+                        <button class="btn btn-ghost">90D</button>
+                        <button class="btn btn-ghost">1Y</button>
+                    </div>
+                </div>
+                <canvas id="performanceChart" style="max-height: 300px;"></canvas>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Asset Allocation</h3>
+                </div>
+                <canvas id="allocationChart" style="max-height: 300px;"></canvas>
+            </div>
+        </div>
+
+        <!-- Assets Table -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Your Assets</h3>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button class="btn btn-ghost">
+                        <i data-lucide="filter" style="width: 16px; height: 16px; display: inline; margin-right: 0.25rem;"></i>
+                        Filter
+                    </button>
+                    <button class="btn btn-ghost">
+                        <i data-lucide="arrow-up-down" style="width: 16px; height: 16px; display: inline; margin-right: 0.25rem;"></i>
+                        Sort
+                    </button>
+                </div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Asset</th>
+                        <th>Amount</th>
+                        <th>Value (EUR)</th>
+                        <th>24h Change</th>
+                        <th>Allocation</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="assetsTable">
+                    <!-- Populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // Mock asset data
+        const assets = [
+            { symbol: 'BTC', name: 'Bitcoin', amount: 0.5, price: 42500, change: 2.5, color: '#F7931A' },
+            { symbol: 'ETH', name: 'Ethereum', amount: 5, price: 3200, change: 1.8, color: '#627EEA' },
+            { symbol: 'C2S', name: 'Crowd2Sell', amount: 10000, price: 0.45, change: 15.2, color: '#FF6B00' },
+            { symbol: 'SOL', name: 'Solana', amount: 50, price: 95, change: -0.8, color: '#14F195' },
+            { symbol: 'USDT', name: 'Tether', amount: 5000, price: 1, change: 0.01, color: '#26A17B' },
+            { symbol: 'BNB', name: 'Binance Coin', amount: 3, price: 320, change: 1.2, color: '#F3BA2F' }
+        ];
+
+        // Calculate total value
+        const totalValue = assets.reduce((sum, asset) => sum + (asset.amount * asset.price), 0);
+
+        // Populate assets table
+        const assetsTable = document.getElementById('assetsTable');
+        assets.forEach(asset => {
+            const value = asset.amount * asset.price;
+            const allocation = ((value / totalValue) * 100).toFixed(1);
+            const changeClass = asset.change >= 0 ? 'var(--success)' : 'var(--error)';
+            const changeIcon = asset.change >= 0 ? 'trending-up' : 'trending-down';
+
+            const row = `
+                <tr>
+                    <td>
+                        <div class="asset-cell">
+                            <div class="asset-icon" style="background: ${asset.color}20; color: ${asset.color};">
+                                ${asset.symbol[0]}
+                            </div>
+                            <div class="asset-name">
+                                <span class="asset-symbol">${asset.symbol}</span>
+                                <span class="asset-fullname">${asset.name}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${asset.amount.toLocaleString()} ${asset.symbol}</td>
+                    <td>€${value.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                    <td style="color: ${changeClass};">
+                        <i data-lucide="${changeIcon}" style="width: 16px; height: 16px; display: inline; margin-right: 0.25rem;"></i>
+                        ${asset.change > 0 ? '+' : ''}${asset.change}%
+                    </td>
+                    <td>${allocation}%</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" onclick="window.location.href='markets-swap.html'">Trade</button>
+                            <button class="btn btn-ghost" onclick="window.location.href='wallet-deposit.html'">Deposit</button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+            assetsTable.innerHTML += row;
+        });
+
+        // Re-initialize icons after adding table rows
+        lucide.createIcons();
+
+        // Performance Chart
+        const ctxPerformance = document.getElementById('performanceChart').getContext('2d');
+        const performanceData = Array.from({length: 30}, (_, i) => {
+            return 50000 + Math.random() * 5000 - 2500;
+        });
+
+        new Chart(ctxPerformance, {
+            type: 'line',
+            data: {
+                labels: Array.from({length: 30}, (_, i) => i + 1),
+                datasets: [{
+                    label: 'Portfolio Value (EUR)',
+                    data: performanceData,
+                    borderColor: '#FF6B00',
+                    backgroundColor: 'rgba(255, 107, 0, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        ticks: {
+                            color: '#999',
+                            callback: function(value) {
+                                return '€' + (value / 1000).toFixed(0) + 'k';
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.05)'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: '#999'
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // Allocation Chart
+        const ctxAllocation = document.getElementById('allocationChart').getContext('2d');
+        new Chart(ctxAllocation, {
+            type: 'doughnut',
+            data: {
+                labels: assets.map(a => a.symbol),
+                datasets: [{
+                    data: assets.map(a => a.amount * a.price),
+                    backgroundColor: assets.map(a => a.color),
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            color: '#fff',
+                            padding: 15
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
