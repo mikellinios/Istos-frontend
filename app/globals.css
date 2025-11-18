@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* ISTOS Brand Colors */
+    --primary: #FF6B00;
+    --primary-dark: #E55A00;
+    --primary-light: #FF8C42;
+    --gold: #D4AF37;
+    --gold-light: #F4D683;
+    --secondary: #0A0A0A;
+    --secondary-light: #1A1A1A;
+    --bg-dark: #0A0A0A;
+    --bg-cream: #FFF8F3;
+    --success: #00C896;
+    --error: #FF3B30;
+  }
+
+  * {
+    @apply border-secondary-lighter;
+  }
+
+  body {
+    @apply bg-bg-dark text-white;
+    font-family: 'Source Sans 3', system-ui, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Proxima Nova', system-ui, sans-serif;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .gradient-primary {
+    background: linear-gradient(135deg, #FF6B00 0%, #D4AF37 100%);
+  }
+
+  .gradient-text {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, #FF6B00 0%, #D4AF37 100%);
+  }
+
+  .glass {
+    @apply bg-white/5 backdrop-blur-md border border-white/10;
+  }
+
+  .glass-dark {
+    @apply bg-black/40 backdrop-blur-md border border-white/5;
+  }
+}
